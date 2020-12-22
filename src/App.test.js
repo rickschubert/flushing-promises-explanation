@@ -15,6 +15,10 @@ function setUpMock() {
         .reply(200, mockedWebResponse)
 }
 
+function flushPromises () {
+  return new Promise(setImmediate)
+}
+
 describe("Flushing promises examples", () => {
     it("Only mock network request (no promise flush needed)", async () => {
         setUpMock()
@@ -33,8 +37,9 @@ describe("Flushing promises examples", () => {
         const component = render(<App />)
         const response = component.container.querySelector(".response")
 
-        for (let index = 0; index < 100; index++) {
-            await new Promise(setImmediate)
+        // At 100, it's flaky
+        for (let index = 0; index < 200; index++) {
+            await flushPromises()
         }
         expect(response.textContent).toEqual(mockedWebResponse)
     })
