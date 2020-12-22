@@ -16,7 +16,15 @@ function setUpMock() {
 }
 
 function flushPromises () {
-  return new Promise(setImmediate)
+  // Explicit version:
+  return new Promise((resolve, reject) => {
+    setImmediate(() => {
+      resolve()
+    })
+  })
+
+  // Implicit short form:
+  // return new Promise(setImmediate)
 }
 
 describe("Flushing promises examples", () => {
