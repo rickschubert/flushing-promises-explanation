@@ -1,21 +1,31 @@
-import React, { useState } from 'react';
+import React from "react"
 
-function App() {
-  const [webResponse, setWebResponse] = useState("Empty");
-  fetch('http://localhost:3001/')
-  .then(response => response.json())
-  .then(data => {
-    console.warn(data)
-    setWebResponse(JSON.stringify(data))
-  });
-
-  return (
-    <div className="App">
-      <div className="response">
-        {webResponse}
-      </div>
-    </div>
-  );
+export async function makeNetworkRequest() {
+    const response = await fetch("http://localhost:3001/what-day-is-it")
+    const data = await response.json()
+    return JSON.stringify(data)
 }
 
-export default App;
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            webResponse: "Empty",
+        }
+    }
+
+    async componentDidMount() {
+        const webResponse = await makeNetworkRequest()
+        this.setState({webResponse})
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <div className="response">{this.state.webResponse}</div>
+            </div>
+        )
+    }
+}
+
+export default App
